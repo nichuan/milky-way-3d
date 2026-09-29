@@ -1,5 +1,7 @@
 # 银河系 · Milky Way — 交互式三维星系模拟
 
+> 🌐 **在线体验**：<https://nichuan.github.io/milky-way-3d/>
+
 基于 Three.js 的真实感银河系（棒旋星系 SBbc）三维场景，约 **159,200 颗恒星** 全部程序化生成，无任何外部贴图资源。
 
 ## 运行
