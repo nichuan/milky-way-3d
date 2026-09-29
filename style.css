@@ -1,0 +1,151 @@
+:root{
+  --glass: rgba(10, 14, 26, .55);
+  --line: rgba(140, 170, 255, .16);
+  --txt: #cfd8f4;
+  --dim: #7d89ad;
+  --accent: #8fb6ff;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+[hidden]{ display:none !important; }
+html,body{ width:100%; height:100%; overflow:hidden; background:#000004; }
+body{
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif;
+  color:var(--txt);
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+}
+#scene{ position:fixed; inset:0; display:block; }
+
+/* 暗角 + 轻微色彩氛围 */
+#vignette{
+  position:fixed; inset:0; pointer-events:none; z-index:2;
+  background:
+    radial-gradient(ellipse at center, transparent 52%, rgba(0,0,6,.55) 100%),
+    linear-gradient(180deg, rgba(2,4,14,.25), transparent 18%, transparent 82%, rgba(2,4,14,.3));
+}
+
+.ui{ position:fixed; z-index:10; opacity:0; transition:opacity 1.6s ease .4s; }
+body.ready .ui{ opacity:1; }
+body.cinema #title, body.cinema #panel, body.cinema #hints{ opacity:0; pointer-events:none; }
+
+/* ---------- 标题 ---------- */
+#title{ top:34px; left:40px; pointer-events:none; }
+#title h1{
+  font-size:34px; font-weight:200; letter-spacing:.42em; color:#eef2ff;
+  text-shadow:0 0 24px rgba(120,160,255,.55), 0 0 80px rgba(80,120,255,.3);
+}
+#title p{
+  margin-top:10px; font-size:11px; letter-spacing:.34em; color:var(--dim); font-weight:300;
+}
+
+/* ---------- 控制面板 ---------- */
+#panel{
+  top:34px; right:34px; width:224px; padding:16px 16px 12px;
+  background:var(--glass); border:1px solid var(--line); border-radius:14px;
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  box-shadow:0 8px 40px rgba(0,0,10,.5);
+}
+.p-title{
+  font-size:12px; letter-spacing:.28em; color:#dfe7ff; padding-bottom:10px; margin-bottom:10px;
+  border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:baseline;
+}
+.p-title span{ font-size:9px; color:var(--dim); letter-spacing:.3em; }
+#panel label.ck{
+  display:flex; align-items:center; gap:10px; font-size:12.5px; color:#b9c4e6;
+  padding:6px 2px; cursor:pointer; transition:color .2s;
+}
+#panel label.ck:hover{ color:#fff; }
+#panel label.ck input{ display:none; }
+#panel label.ck i{
+  width:30px; height:16px; border-radius:8px; background:rgba(120,140,200,.18);
+  border:1px solid rgba(150,170,230,.25); position:relative; transition:.25s; flex:none;
+}
+#panel label.ck i::after{
+  content:""; position:absolute; top:2px; left:2px; width:10px; height:10px; border-radius:50%;
+  background:#93a5cf; transition:.25s;
+}
+#panel label.ck input:checked + i{ background:rgba(110,150,255,.4); border-color:rgba(150,190,255,.6); }
+#panel label.ck input:checked + i::after{ left:16px; background:#eaf1ff; box-shadow:0 0 8px rgba(150,190,255,.9); }
+
+#panel .row{
+  display:flex; align-items:center; gap:10px; font-size:12px; color:#b9c4e6; padding:7px 2px 0;
+}
+#panel .row span{ width:32px; flex:none; letter-spacing:.15em; }
+#panel input[type=range]{
+  flex:1; appearance:none; -webkit-appearance:none; height:3px; border-radius:2px;
+  background:linear-gradient(90deg,#6f9bff,#31437a); outline:none; cursor:pointer;
+}
+#panel input[type=range]::-webkit-slider-thumb{
+  appearance:none; -webkit-appearance:none; width:12px; height:12px; border-radius:50%;
+  background:#eaf1ff; box-shadow:0 0 10px rgba(140,180,255,.9); cursor:pointer;
+}
+#panel .stats{
+  display:flex; justify-content:space-between; margin-top:12px; padding-top:9px;
+  border-top:1px solid var(--line); font-size:10.5px; color:var(--dim); letter-spacing:.08em;
+}
+#fps{ color:#8fe3b0; }
+
+/* ---------- 标注 ---------- */
+#labels{ position:fixed; inset:0; z-index:5; pointer-events:none; overflow:hidden; }
+.lbl{
+  position:absolute; transform:translate(-50%,-160%); white-space:nowrap;
+  font-size:11px; letter-spacing:.22em; color:#aebbdd; font-weight:300;
+  text-shadow:0 0 12px rgba(0,0,10,.95), 0 0 4px rgba(0,0,10,.9);
+  padding-bottom:10px; transition:opacity .4s;
+}
+.lbl::after{
+  content:""; position:absolute; left:50%; bottom:0; width:3px; height:3px; border-radius:50%;
+  background:#bcd0ff; box-shadow:0 0 8px 2px rgba(140,180,255,.55);
+  transform:translateX(-50%);
+}
+.lbl small{ display:block; font-size:8.5px; letter-spacing:.3em; color:var(--dim); text-align:center; margin-top:2px; }
+.lbl.sun{ color:#ffe9c9; }
+.lbl.sun::after{ background:#ffe2ae; box-shadow:0 0 10px 3px rgba(255,210,140,.6); }
+.lbl.sun small{ color:#c9a97e; }
+.lbl.core{ color:#ffd9a8; }
+.lbl.core::after{ background:#ffd9a8; box-shadow:0 0 12px 4px rgba(255,190,110,.55); }
+.lbl.core small{ color:#c9a97e; }
+
+/* ---------- 底部提示 ---------- */
+#hints{
+  bottom:26px; left:50%; transform:translateX(-50%);
+  display:flex; align-items:center; gap:18px; font-size:11px; color:var(--dim); letter-spacing:.12em;
+  padding:9px 22px; background:var(--glass); border:1px solid var(--line); border-radius:20px;
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); white-space:nowrap;
+}
+#hints em{ font-style:normal; color:#aebbdd; }
+#hints kbd{
+  font-family:inherit; font-size:10px; color:#aebbdd; border:1px solid rgba(150,170,230,.3);
+  border-radius:4px; padding:1px 5px; margin-right:3px;
+}
+#hints .sep{ width:1px; height:12px; background:var(--line); }
+
+/* ---------- 加载屏 ---------- */
+#loading{
+  position:fixed; inset:0; z-index:50; background:#000004;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px;
+  transition:opacity 1.1s ease; 
+}
+#loading.hide{ opacity:0; pointer-events:none; }
+#loading p{ font-size:12px; letter-spacing:.4em; color:var(--dim); font-weight:300; }
+#loading p b{ color:#aebbdd; font-weight:400; }
+.l-ring{
+  width:46px; height:46px; border-radius:50%;
+  border:1px solid rgba(140,170,255,.15); border-top-color:#8fb6ff;
+  animation:spin 1s linear infinite;
+  box-shadow:0 0 30px rgba(110,150,255,.25);
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+#nogl{
+  position:fixed; inset:0; z-index:60; background:#000; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:12px; color:#cfd8f4;
+}
+#nogl h2{ font-weight:300; letter-spacing:.2em; }
+#nogl p{ font-size:12px; color:var(--dim); }
+
+@media (max-width:760px){
+  #title h1{ font-size:24px; }
+  #panel{ display:none; }
+  #hints{ display:none; }
+}

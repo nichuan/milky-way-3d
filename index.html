@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>银河系 · Milky Way — 交互式三维星系</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌌</text></svg>">
+<link rel="stylesheet" href="./style.css">
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.min.js" } }
+</script>
+</head>
+<body>
+<canvas id="scene"></canvas>
+
+<div id="vignette"></div>
+
+<!-- 加载屏 -->
+<div id="loading">
+  <div class="l-ring"></div>
+  <p>正在点亮 <b id="loading-count">…</b> 颗恒星</p>
+</div>
+
+<!-- 标题 -->
+<header id="title" class="ui">
+  <h1>银 河 系</h1>
+  <p>MILKY WAY · 交互式三维星系模拟</p>
+</header>
+
+<!-- 控制面板 -->
+<aside id="panel" class="ui">
+  <div class="p-title">控制台 <span>CONTROL</span></div>
+  <label class="ck"><input type="checkbox" id="chkSpin" checked><i></i>银河自转</label>
+  <label class="ck"><input type="checkbox" id="chkCruise" checked><i></i>自动巡航</label>
+  <label class="ck"><input type="checkbox" id="chkLabels" checked><i></i>结构标注</label>
+  <label class="ck"><input type="checkbox" id="chkMarker" checked><i></i>太阳系标记</label>
+  <div class="row"><span>辉光</span><input type="range" id="rngBloom" min="0" max="2" step="0.05" value="0.95"></div>
+  <div class="row"><span>时流</span><input type="range" id="rngTime" min="0" max="5" step="0.1" value="1"></div>
+  <div class="stats"><span id="fps">— FPS</span><span id="starCount">…</span></div>
+</aside>
+
+<!-- 标注层 -->
+<div id="labels"></div>
+
+<!-- 底部提示 -->
+<footer id="hints" class="ui">
+  <span>拖动 <em>旋转</em></span><span>滚轮 <em>缩放</em></span><span>右键 <em>平移</em></span>
+  <span class="sep"></span>
+  <span><kbd>空格</kbd> 时流</span><span><kbd>R</kbd> 巡航</span><span><kbd>L</kbd> 标注</span><span><kbd>H</kbd> 影院模式</span>
+</footer>
+
+<div id="nogl" hidden><h2>⚠ 未检测到 WebGL</h2><p>当前浏览器不支持 WebGL，无法渲染三维星系。</p></div>
+
+<pre id="errlog" style="display:none;position:fixed;left:0;bottom:0;z-index:99;max-width:100%;padding:6px 10px;color:#ff8899;background:rgba(0,0,0,.85);font:11px/1.5 monospace;white-space:pre-wrap"></pre>
+<script>
+(function(){
+  var d = document.getElementById('errlog');
+  function log(msg){ d.style.display = 'block'; d.textContent += msg + "\n"; }
+  window.addEventListener('error', function(e){
+    var stack = e.error && e.error.stack ? String(e.error.stack).split('\n').slice(0, 3).join('  //  ') : '(no stack)';
+    log((e.message || 'error') + '\n    ' + stack);
+  });
+  document.addEventListener('error', function(e){ var t = e.target; if (t && t.tagName) log('EVENT on <' + t.tagName + '> ' + (e.message || '') + ' ' + (e.error && e.error.message || '')); }, true);
+  window.addEventListener('unhandledrejection', function(e){ log('PROMISE: ' + String(e.reason && e.reason.message || e.reason)); });
+})();
+</script>
+
+<script type="module" src="./main.js"></script>
+</body>
+</html>
